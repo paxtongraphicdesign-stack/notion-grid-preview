@@ -1,0 +1,1 @@
+- [Notion Feed Preview](notion-feed-preview.md) — server-side sorts in Notion API fail if property names differ; skip them and sort client-side instead.

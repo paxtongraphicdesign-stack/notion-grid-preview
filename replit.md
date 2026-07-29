@@ -1,6 +1,6 @@
-# [Project name]
+# Content Feed Preview
 
-_Replace the heading above with the project's name, and this line with one sentence describing what this app does for users._
+A read-only Instagram-style grid preview widget that connects to a Notion content calendar and can be embedded directly inside a Notion page.
 
 ## Run & Operate
 
