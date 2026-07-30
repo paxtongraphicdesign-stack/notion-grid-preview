@@ -1,1 +1,2 @@
 - [Notion Feed Preview](notion-feed-preview.md) — server-side sorts in Notion API fail if property names differ; skip them and sort client-side instead.
+- [Feed Preview Architecture](feed-preview-arch.md) — feed-preview is React+Vite; Notion fetch lives in api-server, not the frontend.

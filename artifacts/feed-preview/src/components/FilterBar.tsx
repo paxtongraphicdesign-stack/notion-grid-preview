@@ -1,5 +1,3 @@
-'use client';
-
 interface FilterBarProps {
   statuses: string[];
   platforms: string[];
@@ -30,9 +28,7 @@ export default function FilterBar({
         >
           <option value="">All statuses</option>
           {statuses.map((s) => (
-            <option key={s} value={s}>
-              {s}
-            </option>
+            <option key={s} value={s}>{s}</option>
           ))}
         </select>
       )}
@@ -45,9 +41,7 @@ export default function FilterBar({
         >
           <option value="">All platforms</option>
           {platforms.map((p) => (
-            <option key={p} value={p}>
-              {p}
-            </option>
+            <option key={p} value={p}>{p}</option>
           ))}
         </select>
       )}

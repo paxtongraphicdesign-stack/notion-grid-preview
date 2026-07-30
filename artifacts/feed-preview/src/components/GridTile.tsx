@@ -1,5 +1,3 @@
-'use client';
-
 import type { NotionPost } from '@/types';
 
 interface GridTileProps {
@@ -12,22 +10,21 @@ export default function GridTile({ post, onClick }: GridTileProps) {
   const hasMultiple = post.media.length > 1;
 
   const formattedDate = post.date
-    ? new Date(post.date).toLocaleDateString('en-US', {
-        month: 'short',
-        day: 'numeric',
-      })
+    ? new Date(post.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
     : null;
 
   return (
-    <div className="grid-tile" onClick={onClick} role="button" tabIndex={0}
+    <div
+      className="grid-tile"
+      onClick={onClick}
+      role="button"
+      tabIndex={0}
       onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') onClick(); }}
       aria-label={`Open post: ${post.title}`}
     >
-      {/* Thumbnail media */}
       {firstMedia ? (
         firstMedia.type === 'video' ? (
           <>
-            {/* Use poster if available; fall back to a black box */}
             <video
               src={firstMedia.url}
               muted
@@ -36,9 +33,7 @@ export default function GridTile({ post, onClick }: GridTileProps) {
               style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
               onError={(e) => { (e.currentTarget as HTMLVideoElement).style.display = 'none'; }}
             />
-            <span className="tile-video-icon" aria-hidden="true">
-              <VideoIcon />
-            </span>
+            <span className="tile-video-icon" aria-hidden="true"><VideoIcon /></span>
           </>
         ) : firstMedia.type === 'canva' ? (
           <iframe
@@ -49,7 +44,6 @@ export default function GridTile({ post, onClick }: GridTileProps) {
             tabIndex={-1}
           />
         ) : (
-          // eslint-disable-next-line @next/next/no-img-element
           <img
             src={firstMedia.url}
             alt={post.title}
@@ -69,22 +63,19 @@ export default function GridTile({ post, onClick }: GridTileProps) {
         )
       ) : null}
 
-      {/* Hover overlay */}
       <div className="tile-overlay" aria-hidden="true">
         <p className="tile-overlay-title">{post.title}</p>
         {formattedDate && <p className="tile-overlay-date">{formattedDate}</p>}
       </div>
 
-      {/* Badges */}
       {post.pinned && <span className="tile-pin" aria-label="Pinned">📌</span>}
-      {hasMultiple && !firstMedia?.type.includes('video') && (
+      {hasMultiple && firstMedia?.type !== 'video' && (
         <span className="tile-multi-icon" aria-hidden="true"><MultiIcon /></span>
       )}
     </div>
   );
 }
 
-// Placeholder tile for empty grid slots
 export function EmptyTile() {
   return (
     <div className="grid-tile empty">
@@ -98,7 +89,6 @@ function toCanvaEmbedUrl(url: string): string {
   return `${url}?embed=1`;
 }
 
-// ── Icons ──────────────────────────────────────────────────────────────────────
 function VideoIcon() {
   return (
     <svg width="18" height="18" viewBox="0 0 24 24" fill="white" aria-hidden="true">

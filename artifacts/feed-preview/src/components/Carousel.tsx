@@ -1,5 +1,3 @@
-'use client';
-
 import { useState, useCallback, useEffect, useRef } from 'react';
 import type { MediaItem } from '@/types';
 
@@ -15,7 +13,6 @@ export default function Carousel({ items }: CarouselProps) {
   const prev = useCallback(() => setIndex((i) => Math.max(0, i - 1)), []);
   const next = useCallback(() => setIndex((i) => Math.min(total - 1, i + 1)), [total]);
 
-  // Keyboard navigation
   useEffect(() => {
     function onKey(e: KeyboardEvent) {
       if (e.key === 'ArrowLeft') prev();
@@ -41,11 +38,7 @@ export default function Carousel({ items }: CarouselProps) {
   if (!item) return null;
 
   return (
-    <div
-      className="carousel-root"
-      onTouchStart={onTouchStart}
-      onTouchEnd={onTouchEnd}
-    >
+    <div className="carousel-root" onTouchStart={onTouchStart} onTouchEnd={onTouchEnd}>
       <div className="carousel-track">
         <div className="carousel-slide">
           <SlideMedia item={item} />
@@ -54,20 +47,10 @@ export default function Carousel({ items }: CarouselProps) {
 
       {total > 1 && (
         <>
-          <button
-            className="carousel-arrow prev"
-            onClick={prev}
-            disabled={index === 0}
-            aria-label="Previous slide"
-          >
+          <button className="carousel-arrow prev" onClick={prev} disabled={index === 0} aria-label="Previous slide">
             <ChevronLeft />
           </button>
-          <button
-            className="carousel-arrow next"
-            onClick={next}
-            disabled={index === total - 1}
-            aria-label="Next slide"
-          >
+          <button className="carousel-arrow next" onClick={next} disabled={index === total - 1} aria-label="Next slide">
             <ChevronRight />
           </button>
           <div className="carousel-dots" aria-hidden="true">
@@ -94,11 +77,9 @@ function SlideMedia({ item }: { item: MediaItem }) {
   }
 
   if (item.type === 'canva') {
-    // Convert Canva share URL to embed URL
-    const embedUrl = toCanvaEmbedUrl(item.url);
     return (
       <iframe
-        src={embedUrl}
+        src={toCanvaEmbedUrl(item.url)}
         style={{ width: '100%', aspectRatio: '1/1', border: 'none', display: 'block' }}
         allowFullScreen
         title="Canva design"
@@ -107,9 +88,7 @@ function SlideMedia({ item }: { item: MediaItem }) {
     );
   }
 
-  // Default: image
   return (
-    // eslint-disable-next-line @next/next/no-img-element
     <img
       src={item.url}
       alt={item.name ?? 'Post media'}
@@ -119,12 +98,10 @@ function SlideMedia({ item }: { item: MediaItem }) {
 }
 
 function toCanvaEmbedUrl(url: string): string {
-  // https://www.canva.com/design/DAF.../view → append ?embed
   if (url.includes('?')) return `${url}&embed=1`;
   return `${url}?embed=1`;
 }
 
-// ── Icons ──────────────────────────────────────────────────────────────────────
 function ChevronLeft() {
   return (
     <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">

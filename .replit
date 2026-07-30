@@ -11,27 +11,6 @@ env = { "CI" = "true" }
 [workflows]
 runButton = "Project"
 
-[[workflows.workflow]]
-name = "Project"
-mode = "parallel"
-author = "agent"
-
-[[workflows.workflow.tasks]]
-task = "workflow.run"
-args = "Feed Preview"
-
-[[workflows.workflow]]
-name = "Feed Preview"
-author = "agent"
-
-[[workflows.workflow.tasks]]
-task = "shell.exec"
-args = "PORT=3000 pnpm --filter @workspace/feed-preview run dev"
-waitForPort = 3000
-
-[workflows.workflow.metadata]
-outputType = "webview"
-
 [agent]
 stack = "PNPM_WORKSPACE"
 expertMode = true

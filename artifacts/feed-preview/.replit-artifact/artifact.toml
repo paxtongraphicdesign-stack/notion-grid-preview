@@ -1,0 +1,27 @@
+kind = "web"
+previewPath = "/"
+title = "Content Feed Preview"
+version = "1.0.0"
+id = "artifacts/feed-preview"
+router = "path"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 23987
+
+[services.development]
+run = "pnpm --filter @workspace/feed-preview run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/feed-preview", "run", "build" ]
+serve = "static"
+publicDir = "artifacts/feed-preview/dist/public"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "23987"
+BASE_PATH = "/"

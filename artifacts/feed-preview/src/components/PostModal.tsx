@@ -1,5 +1,3 @@
-'use client';
-
 import { useEffect, useCallback } from 'react';
 import type { NotionPost } from '@/types';
 import Carousel from './Carousel';
@@ -10,17 +8,13 @@ interface PostModalProps {
 }
 
 export default function PostModal({ post, onClose }: PostModalProps) {
-  // Close on Escape
   const handleKey = useCallback(
-    (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose();
-    },
+    (e: KeyboardEvent) => { if (e.key === 'Escape') onClose(); },
     [onClose],
   );
 
   useEffect(() => {
     window.addEventListener('keydown', handleKey);
-    // Prevent body scroll while modal open
     document.body.style.overflow = 'hidden';
     return () => {
       window.removeEventListener('keydown', handleKey);
@@ -28,33 +22,23 @@ export default function PostModal({ post, onClose }: PostModalProps) {
     };
   }, [handleKey]);
 
-  function onBackdropClick(e: React.MouseEvent) {
-    if (e.target === e.currentTarget) onClose();
-  }
-
   const formattedDate = post.date
-    ? new Date(post.date).toLocaleDateString('en-US', {
-        month: 'short',
-        day: 'numeric',
-        year: 'numeric',
-      })
+    ? new Date(post.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
     : null;
 
   return (
     <div
       className="modal-backdrop"
-      onClick={onBackdropClick}
+      onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}
       role="dialog"
       aria-modal="true"
       aria-label={post.title}
     >
       <div className="modal-card">
-        {/* Close button */}
         <button className="modal-close" onClick={onClose} aria-label="Close">
           <CloseIcon />
         </button>
 
-        {/* Media area */}
         <div className="modal-media">
           {post.media.length > 0 ? (
             <Carousel items={post.media} />
@@ -63,14 +47,9 @@ export default function PostModal({ post, onClose }: PostModalProps) {
           )}
         </div>
 
-        {/* Metadata */}
         <div className="modal-meta">
-          {post.caption && (
-            <p className="modal-caption">{post.caption}</p>
-          )}
-          {formattedDate && (
-            <p className="modal-date">{formattedDate}</p>
-          )}
+          {post.caption && <p className="modal-caption">{post.caption}</p>}
+          {formattedDate && <p className="modal-date">{formattedDate}</p>}
           <a
             className="modal-notion-link"
             href={post.notionUrl}
@@ -85,8 +64,6 @@ export default function PostModal({ post, onClose }: PostModalProps) {
     </div>
   );
 }
-
-// ── Icons ──────────────────────────────────────────────────────────────────────
 
 function CloseIcon() {
   return (

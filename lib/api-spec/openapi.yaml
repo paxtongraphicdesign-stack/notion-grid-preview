@@ -10,6 +10,8 @@ servers:
 tags:
   - name: health
     description: Health operations
+  - name: posts
+    description: Notion content calendar posts
 paths:
   /healthz:
     get:
@@ -24,6 +26,19 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/HealthStatus"
+  /posts:
+    get:
+      operationId: getPosts
+      tags: [posts]
+      summary: Get all visible posts from Notion
+      description: Returns all non-hidden posts from the Notion content calendar database
+      responses:
+        "200":
+          description: Posts list
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PostsResponse"
 components:
   schemas:
     HealthStatus:
@@ -33,4 +48,54 @@ components:
           type: string
       required:
         - status
-
+    MediaItem:
+      type: object
+      required: [type, url]
+      properties:
+        type:
+          type: string
+          enum: [image, video, canva, unknown]
+        url:
+          type: string
+        name:
+          type: ["string", "null"]
+    NotionPost:
+      type: object
+      required: [id, notionUrl, title, date, caption, hidden, pinned, platforms, status, media]
+      properties:
+        id:
+          type: string
+        notionUrl:
+          type: string
+        title:
+          type: string
+        date:
+          type: ["string", "null"]
+        caption:
+          type: string
+        hidden:
+          type: boolean
+        pinned:
+          type: boolean
+        platforms:
+          type: array
+          items:
+            type: string
+        status:
+          type: ["string", "null"]
+        media:
+          type: array
+          items:
+            $ref: "#/components/schemas/MediaItem"
+    PostsResponse:
+      type: object
+      required: [posts, fetchedAt]
+      properties:
+        posts:
+          type: array
+          items:
+            $ref: "#/components/schemas/NotionPost"
+        fetchedAt:
+          type: string
+        error:
+          type: ["string", "null"]

@@ -1,0 +1,16 @@
+kind = "react-vite"
+previewPath = "/"
+title = "Content Feed Preview"
+version = "1.0.0"
+id = "FeedPreviewWgt2026cxz"
+
+[[services]]
+localPort = 3000
+name = "web"
+paths = ["/"]
+
+[services.env]
+PORT = "3000"
+
+[services.development]
+run = "pnpm --filter @workspace/feed-preview run dev"

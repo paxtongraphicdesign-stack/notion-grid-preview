@@ -3,7 +3,7 @@ export type MediaType = 'image' | 'video' | 'canva' | 'unknown';
 export interface MediaItem {
   type: MediaType;
   url: string;
-  name?: string;
+  name?: string | null;
 }
 
 export interface NotionPost {
@@ -22,7 +22,7 @@ export interface NotionPost {
 export interface PostsResponse {
   posts: NotionPost[];
   fetchedAt: string;
-  error?: string;
+  error?: string | null;
 }
 
 export interface FilterState {
