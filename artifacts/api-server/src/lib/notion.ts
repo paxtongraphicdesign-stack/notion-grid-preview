@@ -80,7 +80,7 @@ function getTitle(props: PageObjectResponse['properties']): string {
 }
 
 function getDate(props: PageObjectResponse['properties']): string | null {
-  const p = props['Date'];
+  const p = props['Publish Date'];
   if (!p || p.type !== 'date') return null;
   return p.date?.start ?? null;
 }
