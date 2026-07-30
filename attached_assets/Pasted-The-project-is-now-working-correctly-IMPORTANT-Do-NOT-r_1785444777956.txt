@@ -1,0 +1,66 @@
+The project is now working correctly.
+
+IMPORTANT:
+Do NOT rewrite the application.
+Do NOT change the UI.
+Do NOT change the styling.
+Do NOT change the layout.
+Do NOT change the modal.
+Do NOT change the carousel.
+Do NOT change image support.
+Do NOT change video support.
+Do NOT change Canva support.
+Do NOT change the refresh button.
+Do NOT change the filters.
+Do NOT change any existing functionality.
+
+The ONLY feature I want is to make this widget reusable for unlimited client Notion databases.
+
+Currently, the backend always reads from the NOTION_DATABASE_ID environment variable.
+
+Instead, update the project so it works like this:
+
+1. Read a URL query parameter named `databaseId`.
+
+Example:
+
+https://my-widget.replit.app/?databaseId=3acf44f6252c808ea0e0c4c081226920
+
+2. If `databaseId` exists in the URL:
+   - Use that database ID when querying the Notion API.
+
+3. If `databaseId` is NOT present:
+   - Fall back to the existing NOTION_DATABASE_ID environment variable.
+   - This keeps backwards compatibility with existing embeds.
+
+4. Continue using the existing NOTION_TOKEN secret.
+
+5. Do NOT require redeploying, editing code, or changing environment variables when onboarding a new client.
+
+The goal is:
+
+Agency Widget
+https://my-widget.replit.app/?databaseId=agencyDatabaseID
+
+Client A
+https://my-widget.replit.app/?databaseId=clientADatabaseID
+
+Client B
+https://my-widget.replit.app/?databaseId=clientBDatabaseID
+
+The exact same deployment should display different Notion databases depending only on the `databaseId` in the URL.
+
+Requirements:
+
+- Validate the databaseId parameter before using it.
+- Preserve existing error handling.
+- Preserve existing API endpoints whenever possible.
+- Do not introduce breaking changes.
+- Existing embeds without a databaseId parameter must continue working exactly as they do today.
+
+When finished:
+
+1. Test using two different Notion database IDs.
+2. Confirm the same deployed widget displays different content based on the URL parameter.
+3. Explain exactly where the databaseId should be placed in the URL when embedding the widget into a Notion page.
+4. List every file you modified and briefly explain why.
