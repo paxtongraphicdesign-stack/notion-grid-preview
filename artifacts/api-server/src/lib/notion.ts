@@ -166,12 +166,12 @@ function mapPage(page: PageObjectResponse): NotionPost {
 
 // ── Public API ────────────────────────────────────────────────────────────────
 
-export async function queryPosts(): Promise<NotionPost[]> {
+export async function queryPosts(databaseIdOverride?: string): Promise<NotionPost[]> {
   const token = process.env['NOTION_TOKEN'];
-  const databaseId = process.env['NOTION_DATABASE_ID'];
+  const databaseId = databaseIdOverride?.trim() || process.env['NOTION_DATABASE_ID'];
 
   if (!token) throw new Error('Missing required environment variable: NOTION_TOKEN');
-  if (!databaseId) throw new Error('Missing required environment variable: NOTION_DATABASE_ID');
+  if (!databaseId) throw new Error('No databaseId provided and NOTION_DATABASE_ID env var is not set');
 
   const notion = new Client({ auth: token });
 

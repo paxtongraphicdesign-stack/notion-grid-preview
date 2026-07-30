@@ -10,12 +10,26 @@ const INITIAL_VISIBLE = 12;
 const MAX_POSTS = 60;
 const GRID_MULTIPLE = 3;
 
+/** Read ?databaseId=xxx from the current page URL (works in iframes too). */
+function getDatabaseIdFromUrl(): string | undefined {
+  try {
+    const params = new URLSearchParams(window.location.search);
+    const id = params.get('databaseId');
+    return id?.trim() || undefined;
+  } catch {
+    return undefined;
+  }
+}
+
 export default function FeedGrid() {
+  const databaseId = getDatabaseIdFromUrl();
+
   // Notion signed S3 URLs expire after ~1 hour; refetch every 45 min so
   // thumbnails stay valid without manual intervention.
-  const { data, isLoading, isError, error, refetch, isFetching } = useGetPosts({
-    query: { refetchInterval: 45 * 60 * 1000 },
-  });
+  const { data, isLoading, isError, error, refetch, isFetching } = useGetPosts(
+    { databaseId },
+    { query: { refetchInterval: 45 * 60 * 1000 } },
+  );
 
   const [visible, setVisible] = useState(INITIAL_VISIBLE);
   const [selected, setSelected] = useState<NotionPost | null>(null);

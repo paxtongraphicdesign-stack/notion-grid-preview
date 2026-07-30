@@ -4,16 +4,14 @@ import { filterHidden, sortPosts } from '../lib/sort.js';
 
 const router = Router();
 
-// Sort utilities (inline — no frontend dep)
-function sortAndFilter(posts: ReturnType<typeof filterHidden>) {
-  const visible = filterHidden(posts);
-  return sortPosts(visible);
-}
+router.get('/posts', async (req, res) => {
+  const databaseId = typeof req.query['databaseId'] === 'string'
+    ? req.query['databaseId']
+    : undefined;
 
-router.get('/posts', async (_req, res) => {
   try {
-    const raw = await queryPosts();
-    const posts = sortAndFilter(raw);
+    const raw = await queryPosts(databaseId);
+    const posts = sortPosts(filterHidden(raw));
     res.json({
       posts,
       fetchedAt: new Date().toISOString(),

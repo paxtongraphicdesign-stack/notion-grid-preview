@@ -21,6 +21,10 @@ export const HealthCheckResponse = zod.object({
  * Returns all non-hidden posts from the Notion content calendar database
  * @summary Get all visible posts from Notion
  */
+export const GetPostsQueryParams = zod.object({
+  "databaseId": zod.coerce.string().optional().describe('Notion database ID to query. Falls back to NOTION_DATABASE_ID env var if omitted.')
+})
+
 export const GetPostsResponse = zod.object({
   "posts": zod.array(zod.object({
   "id": zod.string(),

@@ -32,6 +32,13 @@ paths:
       tags: [posts]
       summary: Get all visible posts from Notion
       description: Returns all non-hidden posts from the Notion content calendar database
+      parameters:
+        - name: databaseId
+          in: query
+          required: false
+          description: Notion database ID to query. Falls back to NOTION_DATABASE_ID env var if omitted.
+          schema:
+            type: string
       responses:
         "200":
           description: Posts list

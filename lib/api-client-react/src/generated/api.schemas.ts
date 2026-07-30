@@ -48,3 +48,10 @@ export interface PostsResponse {
   error?: string | null;
 }
 
+export type GetPostsParams = {
+/**
+ * Notion database ID to query. Falls back to NOTION_DATABASE_ID env var if omitted.
+ */
+databaseId?: string;
+};
+

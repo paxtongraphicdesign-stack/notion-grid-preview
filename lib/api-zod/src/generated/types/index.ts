@@ -6,6 +6,7 @@
  * OpenAPI spec version: 0.1.0
  */
 
+export * from './getPostsParams';
 export * from './healthStatus';
 export * from './mediaItem';
 export * from './mediaItemType';

@@ -16,6 +16,7 @@ import type {
 } from '@tanstack/react-query';
 
 import type {
+  GetPostsParams,
   HealthStatus,
   PostsResponse
 } from './api.schemas';
@@ -125,21 +126,28 @@ export function useHealthCheck<TData = Awaited<ReturnType<typeof healthCheck>>, 
 
 
 
-export const getGetPostsUrl = () => {
+export const getGetPostsUrl = (params?: GetPostsParams,) => {
+  const normalizedParams = new URLSearchParams();
 
+  Object.entries(params || {}).forEach(([key, value]) => {
 
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : String(value))
+    }
+  });
 
+  const stringifiedParams = normalizedParams.toString();
 
-  return `/api/posts`
+  return stringifiedParams.length > 0 ? `/api/posts?${stringifiedParams}` : `/api/posts`
 }
 
 /**
  * Returns all non-hidden posts from the Notion content calendar database
  * @summary Get all visible posts from Notion
  */
-export const getPosts = async ( options?: Parameters<typeof customFetch>[1]): Promise<PostsResponse> => {
+export const getPosts = async (params?: GetPostsParams, options?: Parameters<typeof customFetch>[1]): Promise<PostsResponse> => {
 
-  return customFetch<PostsResponse>(getGetPostsUrl(),
+  return customFetch<PostsResponse>(getGetPostsUrl(params),
   {
     ...options,
     method: 'GET'
@@ -152,23 +160,23 @@ export const getPosts = async ( options?: Parameters<typeof customFetch>[1]): Pr
 
 
 
-export const getGetPostsQueryKey = () => {
+export const getGetPostsQueryKey = (params?: GetPostsParams,) => {
     return [
-    `/api/posts`
+    `/api/posts`, ...(params ? [params] : [])
     ] as const;
     }
 
 
-export const getGetPostsQueryOptions = <TData = Awaited<ReturnType<typeof getPosts>>, TError = ErrorType<unknown>>( options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getPosts>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+export const getGetPostsQueryOptions = <TData = Awaited<ReturnType<typeof getPosts>>, TError = ErrorType<unknown>>(params?: GetPostsParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getPosts>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
 ) => {
 
 const {query: queryOptions, request: requestOptions} = options ?? {};
 
-  const queryKey =  queryOptions?.queryKey ?? getGetPostsQueryKey();
+  const queryKey =  queryOptions?.queryKey ?? getGetPostsQueryKey(params);
 
 
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof getPosts>>> = ({ signal }) => getPosts({ signal, ...requestOptions });
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getPosts>>> = ({ signal }) => getPosts(params, { signal, ...requestOptions });
 
 
 
@@ -186,11 +194,11 @@ export type GetPostsQueryError = ErrorType<unknown>
  */
 
 export function useGetPosts<TData = Awaited<ReturnType<typeof getPosts>>, TError = ErrorType<unknown>>(
-  options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getPosts>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+ params?: GetPostsParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getPosts>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
 
  ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
 
-  const queryOptions = getGetPostsQueryOptions(options)
+  const queryOptions = getGetPostsQueryOptions(params,options)
 
   const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
 
