@@ -11,7 +11,11 @@ const MAX_POSTS = 60;
 const GRID_MULTIPLE = 3;
 
 export default function FeedGrid() {
-  const { data, isLoading, isError, error, refetch, isFetching } = useGetPosts();
+  // Notion signed S3 URLs expire after ~1 hour; refetch every 45 min so
+  // thumbnails stay valid without manual intervention.
+  const { data, isLoading, isError, error, refetch, isFetching } = useGetPosts({
+    query: { refetchInterval: 45 * 60 * 1000 },
+  });
 
   const [visible, setVisible] = useState(INITIAL_VISIBLE);
   const [selected, setSelected] = useState<NotionPost | null>(null);

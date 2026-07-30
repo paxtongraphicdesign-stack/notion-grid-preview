@@ -123,12 +123,22 @@ function getLinkProperty(props: PageObjectResponse['properties']): string | null
 
 // ── Page mapper ───────────────────────────────────────────────────────────────
 
+// Log the raw Attachment property once so operators can confirm the URL is present
+let _attachmentLogged = false;
+
 function mapPage(page: PageObjectResponse): NotionPost {
   const props = page.properties;
 
-  const filesMedia = props['Files & Media'];
+  // Accept both 'Attachment' (user's property name) and the legacy 'Files & Media'
+  const attachmentProp = props['Attachment'] ?? props['Files & Media'];
+
+  if (!_attachmentLogged) {
+    _attachmentLogged = true;
+    console.log('[notion] raw Attachment prop (first page):', JSON.stringify(attachmentProp ?? null, null, 2));
+  }
+
   const rawFiles =
-    filesMedia && filesMedia.type === 'files' ? filesMedia.files : [];
+    attachmentProp && attachmentProp.type === 'files' ? attachmentProp.files : [];
 
   let media = parseNotionFiles(rawFiles as NotionFileValue[]);
 
